@@ -11,12 +11,10 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import AuthModal from "./AuthModal";
 
-const NewNavbar = () => {
+const NewNavbar = ({ onRequestAccess }: { onRequestAccess: () => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { isSignedIn } = useUser();
   const [mounted, setMounted] = useState(false);
 
@@ -42,7 +40,7 @@ const NewNavbar = () => {
   const handleRequestAccess = () => {
     if (isSignedIn) {
       // User is logged in, open the AuthModal for request access
-      setIsAuthModalOpen(true);
+      onRequestAccess();
     }
     // If user is not logged in, the SignInButton will handle the click
   };
@@ -275,12 +273,6 @@ const NewNavbar = () => {
           </div>
         </nav>
       </div>
-      
-      {/* Auth Modal */}
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-      />
     </header>
   );
 };

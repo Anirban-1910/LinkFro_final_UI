@@ -171,7 +171,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   // User type selection screen
   if (showUserTypeSelection) {
     return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
         <div 
           className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden"
           style={{
@@ -245,7 +245,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
       <div 
         className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden"
         style={{
