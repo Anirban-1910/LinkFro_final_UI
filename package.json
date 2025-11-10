@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev --turbopack\" \"node websocket-server.js\"",
-    "build": "next build --no-lint",
-    "start": "concurrently \"next start\" \"node websocket-server.js\"",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {

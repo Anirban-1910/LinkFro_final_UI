@@ -1,11 +1,23 @@
 const { WebSocketServer } = require('ws');
 const { createServer } = require('http');
 
-const server = createServer();
+const server = createServer((req, res) => {
+  // Health check endpoint
+  if (req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('WebSocket server is running');
+    return;
+  }
+  
+  // 404 for all other routes
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not found');
+});
+
 const wss = new WebSocketServer({ server });
 
-wss.on('connection', (ws) => {
-  console.log('Client connected');
+wss.on('connection', (ws, request) => {
+  console.log('Client connected from:', request.socket.remoteAddress);
 
   ws.on('message', async (message) => {
     try {
@@ -31,7 +43,32 @@ wss.on('connection', (ws) => {
   });
 });
 
-const PORT = process.env.WS_PORT || 3001;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || process.env.WS_PORT || 3001;
+
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`WebSocket server is running on port ${PORT}`);
 });
+
+// Handle graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing WebSocket server...');
+  wss.close(() => {
+    console.log('WebSocket server closed');
+  });
+  server.close(() => {
+    console.log('HTTP server closed');
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, closing WebSocket server...');
+  wss.close(() => {
+    console.log('WebSocket server closed');
+  });
+  server.close(() => {
+    console.log('HTTP server closed');
+  });
+});
+
+// Export for Vercel compatibility
+module.exports = server;

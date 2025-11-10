@@ -8,6 +8,11 @@ export const useWebSocket = (url: string = process.env.NEXT_PUBLIC_WS_URL || 'ws
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     if (!ws.current) {
       connect();
     }
@@ -20,27 +25,32 @@ export const useWebSocket = (url: string = process.env.NEXT_PUBLIC_WS_URL || 'ws
   }, []);
 
   const connect = () => {
-    ws.current = new WebSocket(url);
+    try {
+      ws.current = new WebSocket(url);
 
-    ws.current.onopen = () => {
-      console.log('WebSocket Connected');
-      setIsConnected(true);
-    };
+      ws.current.onopen = () => {
+        console.log('WebSocket Connected');
+        setIsConnected(true);
+      };
 
-    ws.current.onclose = () => {
-      console.log('WebSocket Disconnected');
+      ws.current.onclose = () => {
+        console.log('WebSocket Disconnected');
+        setIsConnected(false);
+        // Attempt to reconnect after 3 seconds
+        setTimeout(connect, 3000);
+      };
+
+      ws.current.onerror = (error) => {
+        console.error('WebSocket Error:', error);
+      };
+
+      ws.current.onmessage = (event) => {
+        setLastMessage(event.data);
+      };
+    } catch (error) {
+      console.error('Failed to create WebSocket connection:', error);
       setIsConnected(false);
-      // Attempt to reconnect after 3 seconds
-      setTimeout(connect, 3000);
-    };
-
-    ws.current.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
-
-    ws.current.onmessage = (event) => {
-      setLastMessage(event.data);
-    };
+    }
   };
 
   const sendMessage = (message: string) => {

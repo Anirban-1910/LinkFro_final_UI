@@ -32,6 +32,29 @@ A Next.js 15 marketplace where publishers list websites and consumers purchase a
    - pnpm dev
 4. Open the app at `http://localhost:3000`
 
+## Deployment to Vercel
+
+### Standard Deployment
+1. Push your code to a Git repository
+2. Connect your repository to Vercel
+3. Set the following environment variables in your Vercel project settings:
+   - MONGODB_URI=your-mongodb-uri
+   - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+   - CLERK_SECRET_KEY=sk_...
+   - STRIPE_SECRET_KEY=sk_live_or_test
+   - STRIPE_WEBHOOK_SECRET=whsec_...
+4. Deploy the project
+
+### WebSocket Support
+This application uses WebSockets for real-time chat functionality. Vercel has limited support for WebSocket servers, so you have two options:
+
+1. **Use a separate WebSocket server**: Deploy the WebSocket server separately (e.g., on Render, Railway, or a VPS) and set the `NEXT_PUBLIC_WS_URL` environment variable to point to it.
+
+2. **Disable WebSocket functionality**: If you don't need real-time chat, you can remove the WebSocket dependencies and functionality.
+
+For option 1, after deploying your WebSocket server separately:
+1. Add `NEXT_PUBLIC_WS_URL` to your Vercel environment variables with the URL of your WebSocket server (e.g., `wss://your-websocket-server.com`)
+
 ## Scripts
 - dev: Next dev with Turbopack
 - build: Next build

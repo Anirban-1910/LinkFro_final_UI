@@ -32,6 +32,11 @@ export const useChatWebSocket = (url: string = DEFAULT_WS_URL) => {
   }, []);
 
   const connect = useCallback(() => {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     try {
       // Clear any existing connection
       resetConnection();

@@ -16,7 +16,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  outputFileTracingRoot: path.resolve(__dirname, '../../'),
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -29,7 +28,14 @@ const nextConfig: NextConfig = {
         loaders: [LOADER]
       }
     }
-  }
+  },
+  // Added for better Vercel compatibility
+  experimental: {
+    serverComponentsExternalPackages: ['mongoose'],
+  },
+  // Ensure proper output for Vercel
+  output: 'standalone',
+  // Remove problematic outputFileTracingRoot configuration
 };
 
 export default nextConfig;
